@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 8px; margin-bottom: 5px; background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+  <h1>
+    Chat-website voor de Spatie Gang
+  </h1>
+  <h2>
+    deze website lijkt misschien te werken, maar hij werkt nog niet, gebruik hem niet!
+  </h2>
+    <input id="username" placeholder="Enter your username" />
+    <input id="message" placeholder="Type a message..." />
+    <button id="send">Send</button>
+    <ul id="messages"></ul>
+
+    <script>
+        const socket = io();
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('message');
+        const usernameInput = document.getElementById('username');
+        const sendButton = document.getElementById('send');
+
+        // Laad de opgeslagen berichten bij verbinding
+        socket.on('load messages', (msgs) => {
+            msgs.forEach(msg => {
+                const item = document.createElement('li');
+                item.textContent = msg;
+                messages.appendChild(item);
+            });
+        });
+
+        sendButton.addEventListener('click', () => {
+            const message = usernameInput.value + ': ' + messageInput.value;
+            socket.emit('chat message', message);
+            messageInput.value = '';
+        });
+
+        socket.on('chat message', (msg) => {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pouchdb/7.3.1/pouchdb.min.js"></script>
+  <script></script>
+</body>
+</html> 
